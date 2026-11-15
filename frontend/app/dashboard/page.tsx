@@ -51,10 +51,10 @@ function ChartBox({ title, subtitle, children, className = "" }: {
   title: string; subtitle?: string; children: React.ReactNode; className?: string;
 }) {
   return (
-    <div className={`bg-[#0d1117] rounded-2xl border border-slate-800 p-5 shadow-xl flex flex-col ${className}`}>
+    <div className={`bg-[#0d1117] rounded-2xl border border-slate-800 p-4 sm:p-5 shadow-xl flex flex-col ${className}`}>
       <div className="mb-3">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200">{title}</h3>
-        {subtitle && <p className="text-[11px] text-slate-500 mt-0.5 font-mono">{subtitle}</p>}
+        <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-200">{title}</h3>
+        {subtitle && <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 font-mono">{subtitle}</p>}
       </div>
       <div className="flex-1 min-h-0">{children}</div>
     </div>
@@ -112,6 +112,14 @@ function StatCard({ label, value, sub, color = "text-blue-400" }: {
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function DashboardPage() {
   const [plotlyLoaded, setPlotlyLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Load Plotly on client
   useEffect(() => {
@@ -183,13 +191,13 @@ export default function DashboardPage() {
   }];
   const corrLayout = {
     ...PLOTLY_LAYOUT_BASE,
-    margin: { t: 10, r: 20, b: 50, l: 200 },
+    margin: { t: 10, r: isMobile ? 12 : 20, b: 50, l: isMobile ? 115 : 190 },
     xaxis: {
       ...PLOTLY_LAYOUT_BASE.xaxis,
       title: { text: "Pearson r", font: { size: 10, color: C.slate5 } },
       range: [0.173, 0.193],
     },
-    yaxis: { ...PLOTLY_LAYOUT_BASE.yaxis, tickfont: { color: C.slate3, size: 9 } },
+    yaxis: { ...PLOTLY_LAYOUT_BASE.yaxis, tickfont: { color: C.slate3, size: isMobile ? 8 : 9 } },
   };
 
   // ── 3. Permutation Importance (EXP-10) ────────────────────────────────────
@@ -221,12 +229,12 @@ export default function DashboardPage() {
   }];
   const permLayout = {
     ...PLOTLY_LAYOUT_BASE,
-    margin: { t: 10, r: 20, b: 50, l: 200 },
+    margin: { t: 10, r: isMobile ? 12 : 20, b: 50, l: isMobile ? 115 : 190 },
     xaxis: {
       ...PLOTLY_LAYOUT_BASE.xaxis,
       title: { text: "Permutation Importance (Δ RMSE)", font: { size: 10, color: C.slate5 } },
     },
-    yaxis: { ...PLOTLY_LAYOUT_BASE.yaxis, tickfont: { color: C.slate3, size: 9 } },
+    yaxis: { ...PLOTLY_LAYOUT_BASE.yaxis, tickfont: { color: C.slate3, size: isMobile ? 8 : 9 } },
   };
 
   // ── 4. Model R² Comparison (bar) ──────────────────────────────────────────
@@ -436,7 +444,10 @@ export default function DashboardPage() {
       { label: "CV RMSE", values: lgbmTuning.map((d) => d.cv_rmse), range: [0.0205, 0.0210] },
     ],
   }];
-  const parallelLayout = { ...PLOTLY_LAYOUT_BASE, margin: { t: 60, r: 60, b: 20, l: 60 } };
+  const parallelLayout = {
+    ...PLOTLY_LAYOUT_BASE,
+    margin: { t: 50, r: isMobile ? 25 : 60, b: 20, l: isMobile ? 25 : 60 },
+  };
 
   // ── 11. Worst Predictions scatter ─────────────────────────────────────────
   const worstData = [
@@ -544,29 +555,32 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#060911] text-slate-100" style={{ fontFamily: "ui-monospace, monospace" }}>
 
       {/* ── Top Nav ── */}
-      <nav className="sticky top-0 z-50 bg-[#060911]/95 backdrop-blur-md border-b border-slate-800 px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+      <nav className="sticky top-0 z-50 bg-[#060911]/95 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center space-x-2 sm:space-x-3">
           <svg className="w-5 h-5 animate-[spin_20s_linear_infinite]" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.8">
             <polygon points="12 2 22 20 2 20" />
           </svg>
-          <span className="text-sm font-bold tracking-widest text-white">TRIANGULUM</span>
-          <span className="text-slate-600">/</span>
-          <span className="text-xs text-blue-400 font-mono">Training Dashboard</span>
+          <span className="text-xs sm:text-sm font-bold tracking-widest text-white">TRIANGULUM</span>
+          <span className="text-slate-600 hidden xs:inline">/</span>
+          <span className="text-[10px] sm:text-xs text-blue-400 font-mono hidden xs:inline">Training Dashboard</span>
         </div>
-        <Link href="/" className="text-xs font-mono text-slate-400 hover:text-blue-400 transition flex items-center space-x-1.5">
+        <Link
+          href="/"
+          className="text-xs font-mono text-slate-400 hover:text-blue-400 transition flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-slate-800 bg-slate-900/60 hover:border-slate-700"
+        >
           <span>← Back to App</span>
         </Link>
       </nav>
 
-      <main className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 pb-20 pt-8 space-y-10">
+      <main className="relative z-10 max-w-screen-2xl mx-auto px-3 sm:px-6 md:px-8 pb-20 pt-6 sm:pt-8 space-y-8 sm:space-y-10">
 
         {/* ── Page Header ── */}
-        <div className="border-b border-slate-800 pb-6">
+        <div className="border-b border-slate-800 pb-5 sm:pb-6">
           <span className="text-[10px] font-mono uppercase tracking-widest text-blue-400">
             00 // TRAINING DATA ANALYTICS
           </span>
-          <h1 className="text-3xl font-black text-white mt-1">Model Training Dashboard</h1>
-          <p className="text-sm text-slate-400 mt-2 max-w-3xl">
+          <h1 className="text-2xl sm:text-3xl font-black text-white mt-1">Model Training Dashboard</h1>
+          <p className="text-xs sm:text-sm text-slate-400 mt-2 max-w-3xl leading-relaxed">
             Full analytical view of the TRIANGULUM LightGBM flood risk model — dataset statistics,
             feature analysis, experiment results, and error diagnostics.
             Dataset: <span className="text-slate-200">1,117,957 samples · 20 features · 11 experiments</span>.

@@ -32,7 +32,7 @@ export default function WhatIfControls({
   ];
 
   return (
-    <div className="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 shadow-xl backdrop-blur-md">
+    <div className="bg-slate-900/80 rounded-2xl border border-slate-800 p-4 sm:p-6 shadow-xl backdrop-blur-md">
       <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
         <div>
           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-200">

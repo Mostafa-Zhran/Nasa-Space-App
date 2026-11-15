@@ -158,22 +158,22 @@ export default function AreaMap({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search city, region, or coordinates (e.g. Dhaka, New Orleans, 25.0, 85.0)..."
-                className="w-full bg-slate-900/95 text-slate-100 placeholder-slate-500 text-sm rounded-lg px-4 py-2.5 pl-10 border border-slate-700/80 focus:outline-none focus:border-blue-500 transition shadow-lg"
+                placeholder="Search city, region, or coordinates..."
+                className="w-full bg-slate-900/95 text-slate-100 placeholder-slate-500 text-xs sm:text-sm rounded-lg px-3 sm:px-4 py-2 sm:py-2.5 pl-9 sm:pl-10 border border-slate-700/80 focus:outline-none focus:border-blue-500 transition shadow-lg"
               />
-              <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-2.5 sm:left-3 top-2.5 sm:top-3 w-4 h-4 text-slate-400" />
             </div>
             <button
               type="submit"
               disabled={isSearching || !searchQuery.trim()}
-              className="ml-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-sm font-medium rounded-lg transition flex items-center shadow-md"
+              className="ml-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-xs sm:text-sm font-medium rounded-lg transition flex items-center shadow-md whitespace-nowrap"
             >
               {isSearching ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <>
-                  <Navigation className="w-3.5 h-3.5 mr-1.5" />
-                  Locate
+                  <Navigation className="w-3.5 h-3.5 mr-1" />
+                  <span>Locate</span>
                 </>
               )}
             </button>
@@ -188,8 +188,8 @@ export default function AreaMap({
         </div>
       )}
 
-      {/* Map Canvas Wrapper with explicit height */}
-      <div className="relative w-full h-[65vh] min-h-[420px] max-h-[700px] rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
+      {/* Map Canvas Wrapper with explicit responsive height */}
+      <div className="relative w-full h-[52vh] sm:h-[65vh] min-h-[350px] sm:min-h-[420px] max-h-[700px] rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
         <MapContainer
           center={[defaultCenter.lat, defaultCenter.lng]}
           zoom={selectedLocation ? 7 : zoom}
@@ -238,7 +238,7 @@ export default function AreaMap({
         )}
 
         {interactive && (
-          <div className="absolute top-3 right-3 z-[1000] bg-slate-900/80 backdrop-blur-sm border border-slate-700/60 px-2.5 py-1 rounded text-[11px] text-slate-400 pointer-events-none">
+          <div className="hidden sm:block absolute top-3 right-3 z-[1000] bg-slate-900/80 backdrop-blur-sm border border-slate-700/60 px-2.5 py-1 rounded text-[11px] text-slate-400 pointer-events-none">
             Click map to drop pin • Scroll zoom enabled on click
           </div>
         )}

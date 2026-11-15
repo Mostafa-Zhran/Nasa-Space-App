@@ -44,7 +44,7 @@ export default function RiskGauge({
   }[level];
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-6 bg-slate-900/80 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md">
+    <div className="relative flex flex-col items-center justify-center p-4 sm:p-6 bg-slate-900/80 rounded-2xl border border-slate-800 shadow-xl backdrop-blur-md">
       {/* Updating indicator */}
       <div className="absolute top-3 right-3 h-4 flex items-center">
         {isUpdating && (

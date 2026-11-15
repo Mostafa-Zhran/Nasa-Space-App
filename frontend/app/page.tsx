@@ -15,6 +15,8 @@ import {
   HelpCircle,
   Compass,
   BarChart3,
+  Menu,
+  X,
 } from "lucide-react";
 
 import RiskGauge from "@/components/RiskGauge";
@@ -62,6 +64,8 @@ const Triangulum3D = dynamic(() => import("@/components/Triangulum3D"), {
 });
 
 export default function TriangulumApp() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
   // Selected location state
   const [selectedLocation, setSelectedLocation] = useState<{
     lat: number;
@@ -281,8 +285,8 @@ export default function TriangulumApp() {
       </div>
 
       {/* Navigation Header */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#060911]/90 backdrop-blur-md border-b border-slate-800/80 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#060911]/95 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 py-3.5 flex items-center justify-between">
+        <div className="flex items-center space-x-2.5">
           <div className="relative w-7 h-7 flex items-center justify-center">
             <svg
               className="w-6 h-6 animate-[spin_20s_linear_infinite]"
@@ -297,12 +301,13 @@ export default function TriangulumApp() {
             </svg>
             <div className="absolute w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_#60a5fa]"></div>
           </div>
-          <span className="font-mono text-sm font-bold tracking-widest text-white">
+          <span className="font-mono text-sm sm:text-base font-bold tracking-widest text-white">
             TRIANGULUM
           </span>
         </div>
 
-        <div className="hidden md:flex items-center space-x-6 text-xs font-mono text-slate-400">
+        {/* Desktop Links */}
+        <div className="hidden lg:flex items-center space-x-5 text-xs font-mono text-slate-400">
           <button onClick={() => scrollToSection("screen-hero")} className="hover:text-blue-400 transition">
             01 INTRO
           </button>
@@ -321,25 +326,84 @@ export default function TriangulumApp() {
           <button onClick={() => scrollToSection("screen-action")} className="hover:text-blue-400 transition">
             06 PROTOCOL
           </button>
-          <a href="/dashboard" className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-md bg-blue-950/50 border border-blue-800/60 text-blue-400 hover:bg-blue-900/50 transition">
-            <BarChart3 className="w-3 h-3" />
-            <span>DATA DASHBOARD</span>
-          </a>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <span className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-mono bg-blue-950/60 text-blue-400 border border-blue-800/60">
+        {/* Action Controls (Always visible on all screens) */}
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Direct Mobile & Desktop Dashboard Access */}
+          <a
+            href="/dashboard"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-mono text-xs font-bold shadow-md shadow-blue-500/25 border border-blue-400/30 transition active:scale-95"
+            title="Open Interactive Training Analytics Dashboard"
+          >
+            <BarChart3 className="w-3.5 h-3.5" />
+            <span className="inline">DASHBOARD</span>
+          </a>
+
+          <span className="hidden xl:inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-mono bg-blue-950/60 text-blue-400 border border-blue-800/60">
             LightGBM EXP-10
           </span>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white transition active:scale-95"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5 text-blue-400" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed top-[57px] left-0 right-0 z-40 bg-[#060911]/98 backdrop-blur-2xl border-b border-slate-800 px-6 py-5 flex flex-col space-y-3 shadow-2xl">
+          <div className="flex items-center justify-between pb-2.5 border-b border-slate-800/80">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Navigation Menu</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800/60">
+              LightGBM EXP-10
+            </span>
+          </div>
+
+          {[
+            { id: "screen-hero", label: "01 INTRO // MISSION" },
+            { id: "screen-context", label: "02 CONTEXT // METHODOLOGY" },
+            { id: "screen-map", label: "03 SELECT AREA // MAP TARGETING" },
+            { id: "screen-result", label: "04 RESULT // SIMULATION DASHBOARD" },
+            { id: "screen-explanation", label: "05 EXPLANATION // ASSUMPTIONS" },
+            { id: "screen-action", label: "06 PROTOCOL // RESPONSE MATRIX" },
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                scrollToSection(item.id);
+                setMobileMenuOpen(false);
+              }}
+              className="text-left py-2 px-3 rounded-lg hover:bg-slate-900 text-xs font-mono text-slate-200 flex items-center justify-between transition"
+            >
+              <span>{item.label}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+            </button>
+          ))}
+
+          <div className="pt-2">
+            <a
+              href="/dashboard"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 text-white font-bold text-xs font-mono flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/20 active:scale-98 transition"
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span>OPEN PLOTLY TRAINING DASHBOARD →</span>
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* SCREEN 1: HERO                                                           */}
       {/* ========================================================================= */}
       <section
         id="screen-hero"
-        className="relative z-10 min-h-screen flex flex-col justify-center px-6 pt-24 pb-12 scroll-mt-24 max-w-7xl mx-auto"
+        className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 pt-24 pb-12 scroll-mt-24 max-w-7xl mx-auto"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Mission, Headlines, CTA controls */}
@@ -439,7 +503,7 @@ export default function TriangulumApp() {
       {/* ========================================================================= */}
       <section
         id="screen-context"
-        className="relative z-10 min-h-screen flex flex-col justify-center px-6 py-24 scroll-mt-24 max-w-6xl mx-auto border-t border-slate-900"
+        className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 py-20 sm:py-24 scroll-mt-24 max-w-6xl mx-auto border-t border-slate-900"
       >
         <div className="mb-12">
           <span className="text-xs font-mono uppercase tracking-widest text-blue-400">
@@ -506,7 +570,7 @@ export default function TriangulumApp() {
       {/* ========================================================================= */}
       <section
         id="screen-map"
-        className="relative z-10 min-h-screen flex flex-col justify-center px-6 py-20 scroll-mt-24 max-w-6xl mx-auto border-t border-slate-900"
+        className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 py-16 sm:py-20 scroll-mt-24 max-w-6xl mx-auto border-t border-slate-900"
       >
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
           <div>
@@ -565,7 +629,7 @@ export default function TriangulumApp() {
       {/* ========================================================================= */}
       <section
         id="screen-result"
-        className="relative z-10 min-h-screen flex flex-col justify-center px-6 py-20 scroll-mt-24 max-w-7xl mx-auto border-t border-slate-900"
+        className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 py-16 sm:py-20 scroll-mt-24 max-w-7xl mx-auto border-t border-slate-900"
       >
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
@@ -617,34 +681,34 @@ export default function TriangulumApp() {
 
             {/* Environmental Sensor Mock Data Cards */}
             {areaData && (
-              <div className="grid grid-cols-3 gap-3">
-                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase flex items-center justify-between">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="p-2.5 sm:p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                  <div className="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase flex items-center justify-between">
                     <span>Rainfall</span>
                     <span className="text-amber-500/80 text-[9px]"></span>
                   </div>
-                  <div className="text-lg font-bold font-mono text-white mt-1">
-                    {areaData.mock_data.rainfall_mm} <span className="text-xs font-normal text-slate-400">mm</span>
+                  <div className="text-sm sm:text-lg font-bold font-mono text-white mt-0.5 sm:mt-1">
+                    {areaData.mock_data.rainfall_mm} <span className="text-[10px] sm:text-xs font-normal text-slate-400">mm</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase flex items-center justify-between">
+                <div className="p-2.5 sm:p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                  <div className="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase flex items-center justify-between">
                     <span>Soil Moist.</span>
                     <span className="text-amber-500/80 text-[9px]"></span>
                   </div>
-                  <div className="text-lg font-bold font-mono text-white mt-1">
-                    {areaData.mock_data.soil_moisture_pct} <span className="text-xs font-normal text-slate-400">%</span>
+                  <div className="text-sm sm:text-lg font-bold font-mono text-white mt-0.5 sm:mt-1">
+                    {areaData.mock_data.soil_moisture_pct} <span className="text-[10px] sm:text-xs font-normal text-slate-400">%</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase flex items-center justify-between">
+                <div className="p-2.5 sm:p-3 bg-slate-900/60 rounded-xl border border-slate-800/80">
+                  <div className="text-[9px] sm:text-[10px] font-mono text-slate-400 uppercase flex items-center justify-between">
                     <span>River Dist.</span>
                     <span className="text-amber-500/80 text-[9px]"></span>
                   </div>
-                  <div className="text-lg font-bold font-mono text-white mt-1">
-                    {areaData.mock_data.water_body_proximity_km} <span className="text-xs font-normal text-slate-400">km</span>
+                  <div className="text-sm sm:text-lg font-bold font-mono text-white mt-0.5 sm:mt-1">
+                    {areaData.mock_data.water_body_proximity_km} <span className="text-[10px] sm:text-xs font-normal text-slate-400">km</span>
                   </div>
                 </div>
               </div>
@@ -688,7 +752,7 @@ export default function TriangulumApp() {
       {/* ========================================================================= */}
       <section
         id="screen-explanation"
-        className="relative z-10 min-h-screen flex flex-col justify-center px-6 py-24 max-w-5xl mx-auto border-t border-slate-900"
+        className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 py-20 sm:py-24 max-w-5xl mx-auto border-t border-slate-900"
       >
         <div className="mb-10">
           <span className="text-xs font-mono uppercase tracking-widest text-blue-400">
@@ -771,7 +835,7 @@ export default function TriangulumApp() {
       {/* ========================================================================= */}
       <section
         id="screen-action"
-        className="relative z-10 min-h-screen flex flex-col justify-center px-6 py-24 max-w-5xl mx-auto border-t border-slate-900"
+        className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 py-20 sm:py-24 max-w-5xl mx-auto border-t border-slate-900"
       >
         <div className="mb-10 text-center">
           <span className="text-xs font-mono uppercase tracking-widest text-blue-400">
