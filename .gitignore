@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Node.js & Next.js
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+build/
+dist/
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env*.local
+
+# Agent skills cache
+.agents/
+
+# Large model artifacts exceeding GitHub 100MB limit
+outputs/models/EXP_04_Random_Forest.joblib
+
+# Large benchmark datasets & submission (kept locally, referenced via Kaggle/Drive)
+data/train.csv
+data/test.csv
+final/submission.csv

@@ -1,0 +1,30 @@
+{
+  "model_name": "LightGBM_WithSum",
+  "experiment": "EXP-10",
+  "target": "FloodProbability",
+  "features": [
+    "MonsoonIntensity",
+    "TopographyDrainage",
+    "RiverManagement",
+    "Deforestation",
+    "Urbanization",
+    "ClimateChange",
+    "DamsQuality",
+    "Siltation",
+    "AgriculturalPractices",
+    "Encroachments",
+    "IneffectiveDisasterPreparedness",
+    "DrainageSystems",
+    "CoastalVulnerability",
+    "Landslides",
+    "Watersheds",
+    "DeterioratingInfrastructure",
+    "PopulationScore",
+    "WetlandLoss",
+    "InadequatePlanning",
+    "PoliticalFactors"
+  ],
+  "validation_r2": 0.86851,
+  "validation_rmse": 0.01849,
+  "seed": 42
+}
